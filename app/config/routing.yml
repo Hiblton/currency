@@ -1,3 +1,7 @@
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation
+
+currency:
+    path:      /show/{date}
+    defaults:  { _controller: AppBundle:Currency:show }
