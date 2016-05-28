@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Goutte\Client;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 use AppBundle\Entity\ExchangeRate;
 
@@ -16,6 +17,7 @@ class CurrencyController extends Controller
     /**
      * @param string $date
      * @Route("/show/{date}", name="currency")
+     * @throws
      */
     public function showAction($date)
     {
@@ -23,6 +25,10 @@ class CurrencyController extends Controller
             $date = new \DateTime();
         } else {
             $date = \DateTime::createFromFormat("Y-m-d", $date);
+            //if date is in future, set today date
+            if (new \DateTime() < $date) {
+                $date = new \DateTime();
+            }
         }
         $rateList = $this->getDoctrine()
             ->getRepository('AppBundle:ExchangeRate')
@@ -41,7 +47,12 @@ class CurrencyController extends Controller
             $em->flush();
             //create client for grabbing
             $client = new Client();
-            $crawler = $client->request('GET', 'http://www.nbrb.by/statistics/rates/ratesdaily.asp?date=' . $date->format('Y-m-d'));
+            try {
+                $crawler = $client->request('GET', 'http://www.nbrb.by/statistics/rates/ratesdaily.asp?date=' . $date->format('Y-m-d'));
+            } catch (\Exception $e) {
+                $this->get('mail_helper')->sendEmail('from@support.com', 'to@admin.com', $e);
+                throw new HttpException(500, "Whoops! Something was wrong. :/");
+            }
             $crawler->filter('.stexttbl tr')->each(function ($node) use ($date, $em) {
                 if ($node->filter('td')->count()) {
                     $exist_currency = $this->getDoctrine()
