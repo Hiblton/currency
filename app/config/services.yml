@@ -7,6 +7,8 @@ services:
     mail_helper:
         class: AppBundle\Util\MailHelper
         arguments: ['@mailer']
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    app.form.type.datepicker:
+        class: AppBundle\Form\Type\DateFormType
+        arguments: [AppBundle\Entity\ExchangeRate]
+        tags:
+            - { name: form.type, alias: datepicker }

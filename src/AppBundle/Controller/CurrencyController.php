@@ -9,18 +9,21 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Goutte\Client;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-
+use AppBundle\Form\Type\DateFormType;
 use AppBundle\Entity\ExchangeRate;
 
 class CurrencyController extends Controller
 {
     /**
-     * @param string $date
+     * @param Request $request
      * @Route("/show/{date}", name="currency")
      * @throws
      */
-    public function showAction($date)
+    public function showAction(Request $request)
     {
+        $form = $this->createForm(new DateFormType('\AppBundle\Entity\ExchangeRate'), new ExchangeRate());
+        $form->handleRequest($request);
+        $date = $form->getData()->getDate();
         if (!$date) {
             $date = new \DateTime();
         } else {
@@ -73,6 +76,10 @@ class CurrencyController extends Controller
                 ->getExchangeRatesByDate($date->format('Y-m-d'));
         }
 
-        return $this->render('currency/index.html.twig', array('rateList' => $rateList));
+        return $this->render('currency/index.html.twig', array(
+                'rateList' => $rateList,
+                'form' => $form->createView()
+            )
+        );
     }
 }

@@ -1,33 +1,52 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div id="wrapper">
-        <div id="container">
-            <p>
+    <div class="container">
+        <div class="starter-template">
+            <h1>Select date</h1>
+            <div class="row">
+                {{ form_start(form) }}
+                <div class="form-group">
+                    <div class='input-group date' id='datetimepicker'>
+                        {{ form_widget(form.date, {'attr': {'class': 'form-control input-inline datetimepicker'}}) }}
+                        <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form_row(form.submit, { 'label': 'SHOW' }) }}
+                </div>
+                {{ form_end(form) }}
+            </div>
+            <table class="table">
                 {% for rate in rateList %}
-                    {{ rate.code }} {{ rate.price }}<br>
+                    <tr>
+                        <td>{{ rate.code }}</td>
+                        <td>{{ rate.price }}</td>
+                    </tr>
                 {% endfor %}
+            </table>
+            <p>
+
             </p>
         </div>
     </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript">
+        $('#datetimepicker')
+                .datetimepicker({
+                    format: 'YYYY-MM-DD'
+                })
+                .on('changeDate', function () {
+                    $('form').submit();
+                })
+    </script>
 {% endblock %}
 
-{% block stylesheets %}
-    <style>
-        body {
-            background: #F5F5F5;
-            font: 18px/1.5 sans-serif;
-        }
-
-        #wrapper {
-            background: #FFF;
-            margin: 1em auto;
-            max-width: 800px;
-            width: 95%;
-        }
-
-        #container {
-            padding: 2em;
-        }
-    </style>
-{% endblock %}
+{% block stylesheets %}{% endblock %}

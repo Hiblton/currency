@@ -3,5 +3,5 @@ app:
     type:     annotation
 
 currency:
-    path:      /show/{date}
+    path:      /show/
     defaults:  { _controller: AppBundle:Currency:show }
