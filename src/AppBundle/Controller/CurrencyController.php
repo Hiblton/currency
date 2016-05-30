@@ -48,24 +48,22 @@ class CurrencyController extends Controller
             //create client for grabbing
             $client = new Client();
             try {
-                $crawler = $client->request('GET', 'http://www.nbrb.by/statistics/rates/ratesdaily.asp?date=' . $date->format('Y-m-d'));
+                $crawler = $client->request('GET', 'http://www.nbrb.by/Services/XmlExRates.aspx?ondate=' . $date->format('m/d/Y'));
             } catch (\Exception $e) {
                 $this->get('mail_helper')->sendEmail('from@support.com', 'to@admin.com', $e);
                 throw new HttpException(500, "Whoops! Something was wrong. :/");
             }
-            $crawler->filter('.stexttbl tr')->each(function ($node) use ($date, $em) {
-                if ($node->filter('td')->count()) {
-                    $exist_currency = $this->getDoctrine()
-                        ->getRepository('AppBundle:Currency')
-                        ->findOneBy(array('code' => $node->filter('td')->first()->text()));
-                    if ($exist_currency) {
-                        $item = new ExchangeRate();
-                        $item->setDate($date->format('Y-m-d'));
-                        $item->setCode($exist_currency->getCode());
-                        $item->setPrice($node->filter('td')->last()->text());
+            $crawler->filter('Currency')->each(function ($node) use ($date, $em) {
+                $exist_currency = $this->getDoctrine()
+                    ->getRepository('AppBundle:Currency')
+                    ->findOneBy(array('code' => $node->filter('CharCode')->text()));
+                if ($exist_currency) {
+                    $item = new ExchangeRate();
+                    $item->setDate($date->format('Y-m-d'));
+                    $item->setCode($node->filter('CharCode')->text());
+                    $item->setPrice($node->filter('Rate')->text());
 
-                        $em->persist($item);
-                    }
+                    $em->persist($item);
                 }
             });
             $em->flush();
