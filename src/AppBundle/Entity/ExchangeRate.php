@@ -25,15 +25,13 @@ class ExchangeRate
     private $date;
 
     /**
-     * @ORM\Column(type="string", length=10)
-     *
-     * @ORM\OneToMany(targetEntity="Currency", mappedBy="currency")
+     * @ORM\ManyToOne(targetEntity="Currency")
      * @ORM\JoinColumn(name="code", referencedColumnName="code")
      */
     private $code;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", name="price")
      */
     private $price;
 

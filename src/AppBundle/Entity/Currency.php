@@ -12,34 +12,16 @@ use Doctrine\ORM\Mapping as ORM;
 class Currency
 {
     /**
-     * @ORM\Column(type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    /**
-     * @ORM\Column(type="string", length=10)
+     * @ORM\Column(type="string", unique=true, length=10, name="code")
      *
-     * @ORM\ManyToOne(targetEntity="ExchangeRate", inversedBy="exchange_rate")
-     * @ORM\JoinColumn(name="code", referencedColumnName="code")
      */
     private $code;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="string", name="title")
      */
     private $title;
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Set code

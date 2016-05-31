@@ -63,7 +63,7 @@ class CurrencyController extends Controller
                 if ($exist_currency) {
                     $item = new ExchangeRate();
                     $item->setDate($date->format('Y-m-d'));
-                    $item->setCode($node->filter('CharCode')->text());
+                    $item->setCode($exist_currency);
                     $item->setPrice($node->filter('Rate')->text());
 
                     $em->persist($item);

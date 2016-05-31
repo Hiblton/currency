@@ -14,15 +14,18 @@
                                 </span>
                     </div>
                 </div>
-                <div class="form-group">
-                    {{ form_row(form.submit, { 'label': 'SHOW' }) }}
-                </div>
                 {{ form_end(form) }}
             </div>
             <table class="table">
+                <tr>
+                    <th>Код</th>
+                    <th>Наименование</th>
+                    <th>Курс</th>
+                </tr>
                 {% for rate in rateList %}
                     <tr>
-                        <td>{{ rate.code }}</td>
+                        <td>{{ rate.code.code }}</td>
+                        <td>{{ rate.code.title }}</td>
                         <td>{{ rate.price }}</td>
                     </tr>
                 {% endfor %}
@@ -43,9 +46,9 @@
                 .datetimepicker({
                     format: 'YYYY-MM-DD'
                 })
-                .on('changeDate', function () {
+                .on('dp.change', function () {
                     $('form').submit();
-                })
+                });
     </script>
 {% endblock %}
 

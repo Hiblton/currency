@@ -30,8 +30,7 @@ class DateFormType extends AbstractType
                     'data-provide' => 'datepicker',
                     'data-format' => 'yyyy-mm-dd',
                 ),
-            ))
-            ->add('submit', 'submit');
+            ));
 
         $builder->get('date');
     }
